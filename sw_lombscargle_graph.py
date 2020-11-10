@@ -67,8 +67,8 @@ def plot_graph(data, out_filepath, to_display=False, save_to_disk=True):
         plt.savefig(out_filepath)
 
     # Generate output
-    for val in frequency:
-        output_data.append([frequency, power])
+    for idx, freq in enumerate(frequency):
+        output_data.append([freq, power[idx]])
 
     return output_data
 
