@@ -7,7 +7,6 @@ Plot graph according to the DAT file
 import csv
 import glob
 import os
-from astropy.timeseries import LombScargle
 import matplotlib.pyplot as plt
 import scipy.signal as signal
 import numpy as np
@@ -17,11 +16,24 @@ def read_file_data(filepath):
     Read data in [[val,time],[val, time]] format
     '''
 
-    data = None
+    raw_data = None
+    data = list()
 
+    # Get raw data
     with open(filepath, 'r') as dest_f:
         data_iter = csv.reader(dest_f,delimiter="\t")
-        data = [data for data in data_iter]
+        raw_data = [raw_data for raw_data in data_iter]
+
+    # Filter data with not-valid values or empty values
+    for raw_val in raw_data:
+        try:
+            amp = float(raw_val[0])
+            time = float(raw_val[1])
+            data.append([amp, time])
+        except:
+            pass
+        finally:
+            pass
 
     return data
 
@@ -68,8 +80,8 @@ def plot_graph(data, out_filepath, lb_freq_start=0.01, lb_freq_end=4.0, lb_freq_
     y = list()
 
     for val_pair in data:
-        x.append(float(val_pair[1]))
-        y.append(float(val_pair[0]))
+        x.append(val_pair[1])
+        y.append(val_pair[0])
 
     # Define the array of frequencies for which to compute the periodogram:
     f = np.linspace(lb_freq_start, lb_freq_end, lb_freq_num)
@@ -77,12 +89,16 @@ def plot_graph(data, out_filepath, lb_freq_start=0.01, lb_freq_end=4.0, lb_freq_
     #Calculate Lomb-Scargle periodogram:
     pgram = signal.lombscargle(x, y, f, normalize=False)
 
+    # Create figure with 2 subplots
+    fig = plt.figure()
+    source_ax = fig.add_subplot(211)
+    pgram_ax = fig.add_subplot(212)
+
     #Now make a plot of the input data:
-    plt.subplot(2, 1, 1)
-    plt.plot(x, y, 'b+')
+    source_ax.plot(x, y, 'b+')
+
     #Then plot the normalized periodogram:
-    plt.subplot(2, 1, 2)
-    plt.plot(f, pgram)
+    pgram_ax.plot(f, pgram)
 
     if to_display:
         plt.show()
@@ -114,7 +130,7 @@ def main():
                                     lb_freq_start=0.01,
                                     lb_freq_end=4.0,
                                     lb_freq_num=100000)
-                                    
+
             print("Saved PNG to >> " + out_png_filepath)
 
             save_to_ascii_file(output_data, out_dat_filepath)

@@ -4,10 +4,8 @@ Lomb Scargle periodograms
 
 # Dependencies
 
-* astropy 4.0.1
-
-For install it please use:
+Listed in ***requirements.txt*** For install it please use:
 
 ```
-conda install astropy
+pip install -r requirements.txt
 ```
