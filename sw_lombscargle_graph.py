@@ -10,6 +10,7 @@ import os
 import matplotlib.pyplot as plt
 import scipy.signal as signal
 import numpy as np
+import math
 
 def read_file_data(filepath):
     '''
@@ -108,7 +109,8 @@ def plot_graph(data, out_filepath, lb_freq_start=0.01, lb_freq_end=4.0, lb_freq_
 
     # Generate output
     for idx, freq in enumerate(f):
-        output_data.append([freq, pgram[idx]])
+        period = 2 * math.pi / freq
+        output_data.append([freq, period, pgram[idx]])
 
     return output_data
 
