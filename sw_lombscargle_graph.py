@@ -110,7 +110,7 @@ def plot_graph(data, out_filepath, lb_freq_start=0.01, lb_freq_end=4.0, lb_freq_
     # Generate output
     for idx, freq in enumerate(f):
         period = 2 * math.pi / freq
-        output_data.append([freq, period, pgram[idx]])
+        output_data.append([freq, period, pgram[idx], x[0]])
 
     return output_data
 
